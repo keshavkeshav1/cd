@@ -1,0 +1,115 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+void pm();
+void plus();
+void div1();
+void revstr();
+int i,ch,j,l,addr=100;
+char ex[10],exp_main[10] ,exp1[10],exp_2[10],id1[5],op[5],id2[5];
+void revstr(char *str1)
+{
+    int i,len,temp;
+    len=strlen(str1);
+    for(i=0;i<len/2;i++)
+    {
+        temp=str1[i];
+        str1[i]=str1[len-i-1];
+        str1[len-i-1]=temp;
+    }
+}
+void main()
+{
+while(1)
+{
+printf("\n1.assignment\n2.arithmetic\n3.relational\n4.Exit\nEnter the choice:");
+scanf("%d",&ch);
+switch(ch)
+{
+case 1:
+printf("\nEnter the expression with assignment operator:");
+scanf("%s",exp_main);
+l=strlen(exp_main);
+exp_2[0]='\0';
+i=0;
+while(exp_main[i]!='=')
+{
+i++;
+}
+strncat(exp_2,exp_main,i);
+revstr(exp_main);
+exp1[0]='\0';
+strncat(exp1,exp_main,l-(i+1));
+revstr(exp1);
+printf("Three address code:\ntemp=%s\n%s=temp\n",exp1,exp_2);
+break;
+
+case 2:
+printf("\nEnter the expression with arithmetic operator:");
+scanf("%s",ex);
+strcpy(exp_main,ex);
+l=strlen(exp_main);
+exp1[0]='\0';
+
+for(i=0;i<l;i++)
+{
+if(exp_main[i]=='+'||exp_main[i]=='-')
+{
+if(exp_main[i+2]=='/'||exp_main[i+2]=='*')
+{
+pm();
+break;
+}
+else
+{
+plus();
+break;
+}
+}
+else if(exp_main[i]=='/'||exp_main[i]=='*')
+{
+div1();
+break;
+}
+}
+break;
+
+case 3:
+printf("Enter the expression with relational operator");
+scanf("%s%s%s",&id1,&op,&id2);
+if(((strcmp(op,"<")==0)||(strcmp(op,">")==0)||(strcmp(op,"<=")==0)||(strcmp(op,">=")==0)||(strcmp(op,"==")==0)||(strcmp(op,"!=")==0))==0)
+printf("Expression is error");
+else
+{
+printf("\n%d\tif %s%s%s goto %d",addr,id1,op,id2,addr+3);
+addr++;
+printf("\n%d\t T:=0",addr);
+addr++;
+printf("\n%d\t goto %d",addr,addr+2);
+addr++;
+printf("\n%d\t T:=1",addr);
+}
+break;
+case 4:
+exit(0);
+}
+}
+}
+void pm()
+{
+revstr(exp_main);
+j=l-i-1;
+strncat(exp1,exp_main,j);
+revstr(exp1);
+printf("Three address code:\ntemp=%s\ntemp1=%c%ctemp\n",exp1,exp_main[j+1],exp_main[j]);
+}
+void div1()
+{
+strncat(exp1,exp_main,i+2);
+printf("Three address code:\ntemp=%s\ntemp1=temp%c%c\n",exp1,exp_main[i+2],exp_main[i+3]);
+}
+void plus()
+{
+strncat(exp1,exp_main,i+2);
+printf("Three address code:\ntemp=%s\ntemp1=temp%c%c\n",exp1,exp_main[i+2],exp_main[i+3]);
+}
